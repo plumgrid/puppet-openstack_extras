@@ -8,12 +8,19 @@
 # [*release*]
 #   (optional) The OpenStack release to add an
 #   Ubuntu Cloud Archive APT source for.
-#   Defaults to 'kilo'
+#   Defaults to 'liberty'
 #
 # [*manage_uca*]
 #   (optional) Whether or not to add the default
 #   Ubuntu Cloud Archive APT source
 #   Defaults to true
+#
+# [*repo*]
+#   (optional) Select with repository we want to use
+#   Can be 'updates' or 'proposed'
+#   'proposed' to test upgrade to the next version
+#   'updates' to install the latest stable version
+#   Defaults to 'updates'
 #
 # [*source_hash*]
 #   (optional) A hash of apt::source resources to
@@ -33,6 +40,7 @@
 class openstack_extras::repo::debian::ubuntu(
   $release         = $::openstack_extras::repo::debian::params::release,
   $manage_uca      = true,
+  $repo            = 'updates',
   $source_hash     = {},
   $source_defaults = {},
   $package_require = false
@@ -49,7 +57,7 @@ class openstack_extras::repo::debian::ubuntu(
     }
     apt::source { $::openstack_extras::repo::debian::params::uca_name:
       location => $::openstack_extras::repo::debian::params::uca_location,
-      release  => "${::lsbdistcodename}-updates/${release}",
+      release  => "${::lsbdistcodename}-${repo}/${release}",
       repos    => $::openstack_extras::repo::debian::params::uca_repos,
     }
   }
